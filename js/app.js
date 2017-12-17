@@ -174,9 +174,9 @@ var NewsForm = React.createClass({
                 <input type="text" ref="textInput" className="add__text" placeholder="Enter the abridged text of the article" defaultValue={this.props.item.text || ""} />
                 <textarea type="text" ref="bigTextInput" className="add__big_text" placeholder="Enter the full text of the article" defaultValue={this.props.item.bigText || ""} />
                 <label	className='add__checkrule'>
-                    <input	type='checkbox'	defaultChecked={this.state.isAgreeChecked}	ref='checkrule'	onChange={this.onChangeCheckRule}/>I agree with the rules
+                    <input	type='checkbox'	defaultChecked={this.state.isAgreeChecked}	ref='checkrule'	onChange={this.onChangeCheckRule} />I agree with the rules
                 </label>
-                <button ref="submitForm" className="add__btn" onClick={this.onFormSubmit} disabled={!this.state.isAgreeChecked}>Add news</button>
+                <button ref="submitForm" className="add__btn" onClick={this.onFormSubmit} disabled={!this.state.isAgreeChecked}>{(this.props.item ? "Edit" : "Add")} news</button>
                 <button ref="hideForm" className="cancel__btn" onClick={this.onCancelButtonClick}>Cancel</button>
             </form>
         );
@@ -211,7 +211,10 @@ var News = React.createClass({
     },
     onAddButtonClick: function (e) {
         e.preventDefault();
-        this.setState({showForm: true});
+        this.setState({
+            showForm: true,
+            itemForEdit: ''
+        });
     },
     render: function(){
         var news = this.props.news;
