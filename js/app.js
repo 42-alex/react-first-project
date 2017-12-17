@@ -99,10 +99,10 @@ var Article = React.createClass({
         this.setState({commentsVisible: false});
     },
     onDeleteClick: function (e) {
-        window.ee.emit('News.delete', this.props.item.id);
+        window.ee.emit('News.delete.item', this.props.item.id);
     },
     onEditClick: function (e) {
-        // edit handler
+        window.ee.emit('NewsForm.edit.item', this.props.item);
     },
     render: function () {
 
@@ -132,33 +132,52 @@ var Article = React.createClass({
 var NewsForm = React.createClass({
     componentDidMount: function () {
         ReactDOM.findDOMNode(this.refs.authorInput).focus();
-
+    },
+    getInitialState: function () {
+        return{
+            isAgreeChecked: false
+        };
     },
     onFormSubmit: function (e) {
         e.preventDefault();
-        alert(
-            'Author: ' + ReactDOM.findDOMNode(this.refs.authorInput).value + "\n" +
-            'Text: ' + ReactDOM.findDOMNode(this.refs.textInput).value + "\n" +
-            'BigText: ' + ReactDOM.findDOMNode(this.refs.checkrule).checked
-        );
+        var item = [{
+            id: this.props.item.id,
+            author: ReactDOM.findDOMNode(this.refs.authorInput).value,
+            text: ReactDOM.findDOMNode(this.refs.textInput).value,
+            bigText: ReactDOM.findDOMNode(this.refs.bigTextInput).value
+        }];
+        if(!item[0].author){
+            swal("Warning!", "Please, enter an author of the article!", "warning");
+        } else if (!item[0].text){
+            swal("Warning!", "Please, enter a text of the article!", "warning");
+        }
+        else {
+            window.ee.emit('NewsForm.submit', item);
+        }
     },
-    onCancelButtonClick: function () {
-        window.ee.emit('NewsForm.cancel.add');
+    onCancelButtonClick: function (e) {
+        e.preventDefault();
+        window.ee.emit('NewsForm.hide');
     },
     onChangeCheckRule: function (e) {
-        ReactDOM.findDOMNode(this.refs.submitNewsButton).disabled = !e.target.checked;
+        this.setState({isAgreeChecked: e.target.checked});
     },
     render: function () {
+        console.log('NewsForm render');
+        console.log('this.props.item: ', this.props.item);
+        console.log('==================================================================================================');
+        console.log('==================================================================================================');
+        console.log('==================================================================================================');
         return(
             <form className='add cf'>
-                <input type="text" ref="authorInput" className="add__author" placeholder="Enter the author of the article" defaultValue="" />
-                <input type="text" ref="textInput" className="add__text" placeholder="Enter the abridged text of the article" defaultValue="" />
-                <textarea type="text" ref="bigTextInput" className="add__big_text" placeholder="Enter the full text of the article" defaultValue="" />
+                <input type="text" ref="authorInput" className="add__author" placeholder="Enter the author of the article" defaultValue={this.props.item.author || ""} />
+                <input type="text" ref="textInput" className="add__text" placeholder="Enter the abridged text of the article" defaultValue={this.props.item.text || ""} />
+                <textarea type="text" ref="bigTextInput" className="add__big_text" placeholder="Enter the full text of the article" defaultValue={this.props.item.bigText || ""} />
                 <label	className='add__checkrule'>
-                    <input	type='checkbox'	defaultChecked={false}	ref='checkrule'	onChange={this.onChangeCheckRule}/>I agree with the rules
+                    <input	type='checkbox'	defaultChecked={this.state.isAgreeChecked}	ref='checkrule'	onChange={this.onChangeCheckRule}/>I agree with the rules
                 </label>
-                <button ref="submitNewsButton" className="add__btn" onClick={this.onFormSubmit} disabled>Add news</button>
-                <button ref="cancelAddNewsButton" className="cancel__btn" onClick={this.onCancelButtonClick}>Cancel</button>
+                <button ref="submitForm" className="add__btn" onClick={this.onFormSubmit} disabled={!this.state.isAgreeChecked}>Add news</button>
+                <button ref="hideForm" className="cancel__btn" onClick={this.onCancelButtonClick}>Cancel</button>
             </form>
         );
     }
@@ -167,16 +186,27 @@ var NewsForm = React.createClass({
 var News = React.createClass({
     componentDidMount: function () {
         var	self	=	this;
-        window.ee.addListener('NewsForm.cancel.add', function()	{
+        window.ee.addListener('NewsForm.hide', function()	{
             self.setState({showForm: false});
         });
+        window.ee.addListener('NewsForm.edit.item', function(item)	{
+            self.setState({
+                showForm: true,
+                itemForEdit: item
+            });
+        });
+    },
+    componentWillUnmount: function () {
+        window.ee.removeListener('NewsForm.hide', function(){});
+        window.ee.removeListener('NewsForm.edit.item', function(){});
     },
     propTypes:	{
         news:	React.PropTypes.array.isRequired
     },
     getInitialState: function () {
         return{
-            showForm: false
+            showForm: false,
+            itemForEdit: ''
         };
     },
     onAddButtonClick: function (e) {
@@ -200,8 +230,8 @@ var News = React.createClass({
         return(
             <div className="news">
                 {newsTemplate}
-                {this.state.showForm ? <NewsForm /> : ""}
-                <a className={"add-button " + (this.state.showForm ? "none" : "")}  href="#" onClick={this.onAddButtonClick} title="Add news">
+                {this.state.showForm ? <NewsForm item={this.state.itemForEdit} /> : ""}
+                <a className={"add-button " + (this.state.showForm ? "none" : "")}  href="#" onClick={this.onAddButtonClick} >
                     <span className="add-icon">&nbsp;</span>
                     <span className="add-text">Add</span>
                 </a>
@@ -215,12 +245,41 @@ var App = React.createClass({
     componentDidMount:	function()	{
         var	self	=	this;
 
-        window.ee.addListener('News.delete',	function(id)	{
+        window.ee.addListener('News.delete.item',	function(id)	{
             var arr = self.state.news;
             var indexToRemove = arr.findIndex(obj => obj.id == id);
             arr.splice(indexToRemove , 1);
             self.setState({news:	arr});
         });
+
+        window.ee.addListener('NewsForm.submit',	function(item)	{
+            var news = self.state.news;
+            if(!item[0].id){
+                var newId = 0;
+                for(var i=0; i<news.length; i++){
+                    if(news[i].id > newId){
+                        newId = news[i].id;
+                    }
+                }
+                item[0].id = parseInt(newId)+1;
+                self.setState({news: item.concat(news)});
+            } else {
+                for(var i=0; i<news.length; i++){
+                    if(news[i].id == item[0].id){
+                        news[i].author = item[0].author;
+                        news[i].text = item[0].text;
+                        news[i].bigText = item[0].bigText;
+                    }
+                }
+                self.setState({news: news});
+            }
+
+            window.ee.emit('NewsForm.hide');
+        });
+    },
+    componentWillUnmount: function () {
+        window.ee.removeListener('News.delete.item', function(){});
+        window.ee.removeListener('NewsForm.submit', function(){});
     },
     getInitialState: function () {
         return{
