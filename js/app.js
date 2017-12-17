@@ -289,10 +289,22 @@ var App = React.createClass({
             news: myNews,
         };
     },
+    onSearch: function (e) {
+        var searchQuery = e.target.value.toLowerCase();
+        var displayedContacts = myNews.filter(function(el) {
+            var searchValue = el.author.toLowerCase();
+            return searchValue.indexOf(searchQuery) !== -1;
+        });
+
+        this.setState({
+            news: displayedContacts
+        });
+    },
     render: function(){
         return(
             <div className="app">
                 <h1>News</h1>
+                <input type="text" className="search__field" onChange={this.onSearch} placeholder="Search articles by author" />
                 <News news={this.state.news}/>
             </div>
         );

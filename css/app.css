@@ -51,12 +51,19 @@ a{
 .add__big_text,
 .add__btn,
 .cancel__btn,
-.add__checkrule	{
+.add__checkrule,
+.search__field {
     display:	block;
     margin:	0	0	5px	0;
     padding:	5px;
     width:	98%;
     border:	1px	solid	rgba(0,	89,	181,	0.82);
+}
+.search__field{
+    display:	block;
+    width: 400px;
+    margin: 0 auto 20px;
+    border-radius: 6px;
 }
 .add__checkrule	{
     border:	none;
