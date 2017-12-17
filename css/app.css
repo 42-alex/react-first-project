@@ -1,0 +1,209 @@
+.app .none{
+    display: none;
+}
+body {
+    background: rgba(0, 102, 255, 0.38);
+    font-family: sans-serif;
+}
+p {
+    margin: 0 0 5px;
+}
+.app{
+    text-align: center;
+}
+a{
+    display: block;
+    text-align: right;
+}
+.article {
+    background: #FFF;
+    border: 1px solid rgba(0, 89, 181, 0.82);
+    width: 600px;
+    margin: 0 0 5px;
+    box-shadow: 2px 2px 5px -1px rgb(0, 81, 202);
+    padding: 3px 5px;
+}
+.news__author {
+    text-decoration: underline;
+    color: #007DDC;
+}
+.news__count {
+    margin: 10px 0 0 0;
+    display: block;
+}
+.article .none{
+    display: none;
+}
+.article-body{
+    position: relative;
+}
+.test-input	{
+    margin:	0 5px 5px 0;
+}
+.add	{
+    margin: 0 auto;
+    width: 600px;
+    border:	1px	dashed	rgba(0,	89,	181,	0.82);
+    padding:	5px;
+}
+.add__author,
+.add__text,
+.add__big_text,
+.add__btn,
+.cancel__btn,
+.add__checkrule	{
+    display:	block;
+    margin:	0	0	5px	0;
+    padding:	5px;
+    width:	98%;
+    border:	1px	solid	rgba(0,	89,	181,	0.82);
+}
+.add__checkrule	{
+    border:	none;
+    font-size:	12px;
+}
+.add__btn	{
+    box-sizing:	content-box;
+    color:	#FFF;
+    text-transform:	uppercase;
+    background:	#007DDC;
+}
+.add__btn:disabled	{
+    background:	#CCC;
+    color:	#999;
+}
+.cancel__btn{
+    box-sizing: content-box;
+}
+
+.article{
+    margin: 0 auto;
+    border: 4px solid red;
+    margin-bottom: 10px;
+}
+.article-author{
+    text-align: center;
+    font-size: 2em;
+}
+.bullet {
+    margin-left: 0;
+    list-style: none;
+    counter-reset: li;
+}
+.bullet li {
+    position: relative;
+    margin-bottom: 1.5em;
+    border: 3px solid #CADFCF;
+    padding: 0.6em;
+    border-radius: 4px;
+    background: #FEFEFE;
+    color: #231F20;
+    font-family: "Trebuchet MS", "Lucida Sans";
+}
+.bullet li:before {
+    position: absolute;
+    top: -0.7em;
+    padding-left: 0.4em;
+    padding-right: 0.4em;
+    font-size: 16px;
+    font-weight: bold;
+    color: #DCC24B;
+    background: #FEFEFE;
+    border-radius: 50%;
+    counter-increment: li;
+    content: counter(li);
+}
+
+.article-delete{
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: url("../img/delete.png") center ;
+    background-size: 10px;
+}
+.article-delete:hover{
+    cursor: pointer;
+}
+.article-edit{
+    position: absolute;
+    top: 0;
+    right: 15px;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: url("../img/edit.png") center ;
+    background-size: 10px;
+}
+.article-edit:hover{
+    cursor: pointer;
+}
+.add-button{
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid #4cae4c;
+    white-space: nowrap;
+    font-size: 14px;
+    line-height: 1.42857143;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #fff;
+    background-color: #5cb85c;
+    padding: 1px 15px 3px 2px;
+    border-radius: 50px;
+    margin: 10px;
+}
+.add-button .add-icon{
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid #4cae4c;
+    white-space: nowrap;
+    font-size: 14px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 50%;
+    color: #3c763d;
+    position: relative;
+    top: 1px;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: 8px;
+    background: url("../img/plus.jpg") center no-repeat #fff;
+    background-size: 15px;
+    margin-right: 4px;
+    width: 31px;
+    height: 31px;
+}
+.article-bigText{
+    background: #ede;
+}
+.add-text{
+    font-weight: bold;
+}
+.news__count{
+    display: block;
+}
+
