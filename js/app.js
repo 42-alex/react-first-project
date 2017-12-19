@@ -163,11 +163,6 @@ var NewsForm = React.createClass({
         this.setState({isAgreeChecked: e.target.checked});
     },
     render: function () {
-        console.log('NewsForm render');
-        console.log('this.props.item: ', this.props.item);
-        console.log('==================================================================================================');
-        console.log('==================================================================================================');
-        console.log('==================================================================================================');
         return(
             <form className='add cf'>
                 <input type="text" ref="authorInput" className="add__author" placeholder="Enter the author of the article" defaultValue={this.props.item.author || ""} />
@@ -248,11 +243,16 @@ var App = React.createClass({
     componentDidMount:	function()	{
         var	self	=	this;
 
+        var localStorageNews = JSON.parse(localStorage.getItem('news'));
+        if(localStorageNews){
+            this.setState({news: localStorageNews});
+        }
+
         window.ee.addListener('News.delete.item',	function(id)	{
             var arr = self.state.news;
             var indexToRemove = arr.findIndex(obj => obj.id == id);
             arr.splice(indexToRemove , 1);
-            self.setState({news:	arr});
+            self.setState({news:	arr}, self._updateLocalStorage);
         });
 
         window.ee.addListener('NewsForm.submit',	function(item)	{
@@ -265,7 +265,7 @@ var App = React.createClass({
                     }
                 }
                 item[0].id = parseInt(newId)+1;
-                self.setState({news: item.concat(news)});
+                self.setState({news: item.concat(news)}, self._updateLocalStorage);
             } else {
                 for(var i=0; i<news.length; i++){
                     if(news[i].id == item[0].id){
@@ -274,7 +274,7 @@ var App = React.createClass({
                         news[i].bigText = item[0].bigText;
                     }
                 }
-                self.setState({news: news});
+                self.setState({news: news}, this._updateLocalStorage);
             }
 
             window.ee.emit('NewsForm.hide');
@@ -299,6 +299,10 @@ var App = React.createClass({
         this.setState({
             news: displayedContacts
         });
+    },
+    _updateLocalStorage: function () {
+        var news = JSON.stringify(this.state.news);
+        localStorage.setItem('news', news);
     },
     render: function(){
         return(
