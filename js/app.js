@@ -265,7 +265,7 @@ var App = React.createClass({
                     }
                 }
                 item[0].id = parseInt(newId)+1;
-                self.setState({news: item.concat(news)}, self._updateLocalStorage);
+                self.setState({news: item.concat(news)});
             } else {
                 for(var i=0; i<news.length; i++){
                     if(news[i].id == item[0].id){
@@ -274,11 +274,14 @@ var App = React.createClass({
                         news[i].bigText = item[0].bigText;
                     }
                 }
-                self.setState({news: news}, this._updateLocalStorage);
+                self.setState({news: news});
             }
 
             window.ee.emit('NewsForm.hide');
         });
+    },
+    componentDidUpdate: function () {
+        this._updateLocalStorage();
     },
     componentWillUnmount: function () {
         window.ee.removeListener('News.delete.item', function(){});
