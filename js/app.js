@@ -133,6 +133,11 @@ var NewsForm = React.createClass({
     componentDidMount: function () {
         ReactDOM.findDOMNode(this.refs.authorInput).focus();
     },
+    componentWillReceiveProps: function (nextProps) {
+        ReactDOM.findDOMNode(this.refs.authorInput).value = nextProps.item.author || "";
+        ReactDOM.findDOMNode(this.refs.textInput).value = nextProps.item.text || "";
+        ReactDOM.findDOMNode(this.refs.bigTextInput).value = nextProps.item.bigText || "";
+    },
     getInitialState: function () {
         return{
             isAgreeChecked: false
