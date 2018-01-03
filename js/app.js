@@ -159,10 +159,12 @@ var NewsForm = React.createClass({
         else {
             window.ee.emit('NewsForm.submit', item);
         }
+
+        this.props.onCancelFormClick();
     },
     onCancelButtonClick: function (e) {
         e.preventDefault();
-        window.ee.emit('NewsForm.hide');
+        this.props.onCancelFormClick();
     },
     onChangeCheckRule: function (e) {
         this.setState({isAgreeChecked: e.target.checked});
@@ -186,9 +188,7 @@ var NewsForm = React.createClass({
 var News = React.createClass({
     componentDidMount: function () {
         var	self	=	this;
-        window.ee.addListener('NewsForm.hide', function()	{
-            self.setState({showForm: false});
-        });
+
         window.ee.addListener('NewsForm.edit.item', function(item)	{
             self.setState({
                 showForm: true,
@@ -197,7 +197,6 @@ var News = React.createClass({
         });
     },
     componentWillUnmount: function () {
-        window.ee.removeListener('NewsForm.hide', function(){});
         window.ee.removeListener('NewsForm.edit.item', function(){});
     },
     propTypes:	{
@@ -216,6 +215,9 @@ var News = React.createClass({
             itemForEdit: ''
         });
     },
+    hideForm: function () {
+        this.setState({showForm: false});
+    },
     render: function(){
         var news = this.props.news;
         if(news.length > 0){
@@ -233,7 +235,7 @@ var News = React.createClass({
         return(
             <div className="news">
                 {newsTemplate}
-                {this.state.showForm ? <NewsForm item={this.state.itemForEdit} /> : ""}
+                {this.state.showForm ? <NewsForm item={this.state.itemForEdit} onCancelFormClick={this.hideForm} /> : ""}
                 <a className={"add-button " + (this.state.showForm ? "none" : "")}  href="#" onClick={this.onAddButtonClick} >
                     <span className="add-icon">&nbsp;</span>
                     <span className="add-text">Add</span>
@@ -281,8 +283,6 @@ var App = React.createClass({
                 }
                 self.setState({news: news});
             }
-
-            window.ee.emit('NewsForm.hide');
         });
     },
     componentDidUpdate: function () {
